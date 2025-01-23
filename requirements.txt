@@ -1,0 +1,4 @@
+librosa
+scipy
+yt-dlp
+tqdm
