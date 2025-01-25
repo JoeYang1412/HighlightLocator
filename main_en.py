@@ -4,12 +4,12 @@ import warnings
 import re
 import shutil
 import time
-from download import Download
+from download_en import Download
 from fingerprint import FingerprintIdentifier
 from search_time import search_subclip
 from sliding_audio_split import SlidingWindowProcessor
 from time_calculate import time_format
-from split_audio_large_segments import LargeAudioSplitter
+from split_audio_large_segments_en import LargeAudioSplitter
 
 #user defined exception
 class RangeError(Exception):
@@ -27,12 +27,12 @@ def download_sound_file(url, output_path, process_type, start_time=None, end_tim
         end_time: int, End time
     """
     downloader = Download(url, output_path)
-    if process_type == 1:  # 下載完整音訊
+    if process_type == 1:               # Download the full audio
         return downloader.download_m4a()
-    elif process_type == 2:  # 下載部分音訊
+    elif process_type == 2:             # Download a section of the audio
         return downloader.download_section_m4a(start_time, end_time)
     else:
-        raise ValueError("process_type 必須為 1 或 2")
+        raise ValueError("process type needs to be 1 or 2")
     
 def get_time_input():
     """
@@ -41,13 +41,13 @@ def get_time_input():
     """
     while True:
         try:
-            print("\n請依順序輸入在精華影片中要查詢的開始時間（分鐘:秒）：")
-            start_minute = get_valid_number("開始時間（分鐘，預設為0）：", default=0, min_value=0, max_value=60)
-            start_seconds = get_valid_number("開始時間（秒，預設為0）：", default=0,min_value=0,max_value=60)
+            print("\nPlease enter the start time for the highlight video in the format (minutes:seconds):")
+            start_minute = get_valid_number("Start time (minutes, default is 0):", default=0, min_value=0, max_value=60)
+            start_seconds = get_valid_number("Start time (seconds, default is 0):", default=0,min_value=0,max_value=60)
 
-            print("\n請依順序輸入在精華影片中要查詢的結束時間（分鐘:秒）：")
-            end_minute = get_valid_number("結束時間（分鐘，預設為0）：", default=0, min_value=0, max_value=60)
-            end_seconds = get_valid_number("結束時間（秒，預設為10）：", default=10,min_value=0,max_value=60)
+            print("\nPlease enter the end time for the highlight video in the format (minutes:seconds):")
+            end_minute = get_valid_number("End time (minutes, default is 0):", default=0, min_value=0, max_value=60)
+            end_seconds = get_valid_number("End time (seconds, default is 10):", default=10,min_value=0,max_value=60)
             
             start_hour=end_hour=0
 
@@ -55,13 +55,13 @@ def get_time_input():
             end = time_format.time_to_sec(end_hour, end_minute, end_seconds)
 
             if start < 0 or end <= start:
-                raise ValueError("開始時間必須小於結束時間！")
+                raise ValueError("Please ensure that the start time is earlier than the end time.")
 
-            return start, end  # 以秒為單位回傳時間範圍
+            return start, end  
 
         except ValueError as e:
-            print(f"輸入錯誤：{e}")
-            print("請重新輸入。")
+            print(f"Input error:{e}")
+            print("Please try again.")
 
 
 def get_valid_number(prompt, default=None, min_value=None, max_value=None):
@@ -82,13 +82,13 @@ def get_valid_number(prompt, default=None, min_value=None, max_value=None):
             value = int(user_input)
 
             if (min_value is not None and value < min_value or max_value is not None and value >= max_value): 
-                raise RangeError(f"輸入值必須大於 {min_value} 或小於 {max_value}！")
+                raise RangeError(f"The input must be greater than {min_value} or less than {max_value}！")
             return value
         
         except ValueError:
-            print("輸入無效：請輸入整數！")
+            print("Invalid input: Please enter an integer!")
         except RangeError as e:
-            print(f"輸入無效：{e}")
+            print(f"Invalid input:{e}")
 
 def get_youtube_url(prompt):
     """
@@ -101,7 +101,7 @@ def get_youtube_url(prompt):
         if is_valid_youtube_url(url):
             return url.split('&')[0]
         else:
-            print("輸入無效，請確保輸入的是有效的 YouTube 網址。")
+            print("Invalid input. Please double-check and enter a valid YouTube URL.")
 
 
 def is_valid_youtube_url(url):
@@ -182,7 +182,7 @@ def process_audio(short_voice_url, long_voice_url, start_time, end_time):
                 if seg_start >= seg_end:
                     break
 
-                print(f"查詢時間段：{time_format.sec_to_time(spilt_segment_index_start*split_duration+seg_start)} ~ {time_format.sec_to_time(spilt_segment_index_start*split_duration+seg_end)} ")
+                print(f"Time range to query:{time_format.sec_to_time(spilt_segment_index_start*split_duration+seg_start)} ~ {time_format.sec_to_time(spilt_segment_index_start*split_duration+seg_end)} ")
 
                 # Split audio
                 spilt_long_audio_array=SlidingWindowProcessor.split_audio(long_audio_array, seg_start, seg_end, 16000)
@@ -193,33 +193,33 @@ def process_audio(short_voice_url, long_voice_url, start_time, end_time):
 
                 # 5) If a match is found, calculate the offset and return the time
                 if is_match:
-                    print("此段落匹配\n")
+                    print("This segment matches.\n")
                     offset_in_seg = search_subclip.find_offset(spilt_long_audio_array, set_sr,short_audio_array, 10)
                     # Calculate the time relative to the entire audio
                     global_offset_sec = spilt_segment_index_start*split_duration+seg_start + offset_in_seg
                     result = time_format.sec_to_time(int(global_offset_sec))
-                    print(f"最終對應時間 = {result}")
+                    print(f"Final mapped time = {result}")
                     # Record the end time of the process
                     process_end_time=time.time()
                     # If the segment contains the short audio, exit the loop
                     # Return the processing time
                     return round(process_end_time-process_start_time,2)
                 else:
-                    print("此段落不匹配")
+                    print("This paragraph does not match.")
 
                 # Update the start time and segment index
                 current_start += segment_length
                 seg_index += 1
             # If no match is found, output a message
-            print("此分割檔中查無匹配段落，載入下一段中...")
+            print("No matching segment found in this split file, loading the next segment...")
             # Delete the downloaded audio files
             
             spilt_segment_index_start+=1
 
-        print("整部影片中查無匹配段落")
+        print("No matching segments found in the entire video.")
         
     except Exception as e:
-        print(f"處理過程中發生錯誤：{str(e)}")
+        print(f"An error occurred while processing the request:{str(e)}")
     finally:
         need_delete_dir = "./yt_dlp"
         if pathlib.Path(short_voice_path).exists():
@@ -248,24 +248,24 @@ def main_menu():
     Main menu: Select the function to execute.
     """
     while True:
-        print("請選擇功能：")
-        print("1. 查找精華影片在原始影片位置")
-        print("2. 離開")
-        choice = input("請選擇：")
+        print("Please select a function:")
+        print("1. Find the position of the highlight video in the original video")
+        print("2. Exit")
+        choice = input("Please select:")
         if choice == '1':
-            print("查詢功能")
+            print("Search Feature")
             # Get the short and long audio URLs and the start and end times
-            short_url = get_youtube_url("請輸入精華影片網址：")
-            long_url = get_youtube_url("請輸入原始影片(直播)網址：")
+            short_url = get_youtube_url("Please enter the highlight video URL:")
+            long_url = get_youtube_url("Please enter the original video (live stream) URL:")
             start, end = get_time_input()
             process_time=process_audio(short_url, long_url, start, end)
-            print(f"處理時間：{process_time}秒")
-            print("查詢結束。\n")
+            print(f"Processing time:{process_time} seconds")
+            print("Search completed.\n")
         elif choice == '2':
-            print("再見！")
+            print("Goodbye!")
             break
         else:
-            print("輸入錯誤，請重新選擇。")
+            print("Invalid input, please try again.")
 
 
 # Entry point

@@ -1,6 +1,6 @@
 import subprocess
 import os
-class split_large_audio_file:
+class LargeAudioSplitter:
     def split_audio_ffmpeg(input_file, segment_duration, output_prefix):
         """
         Split the audio file using FFmpeg and save the segments.
@@ -15,7 +15,7 @@ class split_large_audio_file:
         """
         output_dir = os.path.dirname(output_prefix)
     
-        # 檢查並創建目錄
+        # Create the output directory if it does not exist
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir)
             
@@ -29,5 +29,5 @@ class split_large_audio_file:
             f"{output_prefix}_%03d.m4a"
         ]
         subprocess.run(cmd, check=True)
-        print(f"音訊文件已成功分割，每段 {segment_duration} 秒，輸出到: {output_prefix}_xxx.wav")
+        print(f"音訊文件已成功分割，每段 {segment_duration} 秒，輸出到: {output_prefix}_xxx.wav\n")
 

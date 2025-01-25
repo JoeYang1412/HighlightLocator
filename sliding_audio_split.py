@@ -1,4 +1,4 @@
-class splitAudio:
+class SlidingWindowProcessor:
     """
     Split audio file
     methods:
