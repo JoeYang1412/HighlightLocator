@@ -3,6 +3,7 @@
 ## v1.0.1 Release Notes
 - Added English interface
 - Optimized display logic
+
 For more details, please refer to the Release Notes.
 
 ## Features
@@ -145,6 +146,7 @@ Thank you for your contributions to improve this project!😊
 ## v1.0.1 更新資訊
 - 新增英文介面
 - 優化顯示邏輯
+
 詳請請參閱 Release
 
 ## 功能及特色
