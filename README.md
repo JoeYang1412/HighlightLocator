@@ -1,35 +1,38 @@
 # HighlightLocator
 
-## v1.0.1 Release Notes
-- Added English interface
-- Optimized display logic
+## v1.1.0 Release Notes
+- Highlight and original video sources now support Twitch.
+- Supports both Chinese and English interfaces.  
 
-For more details, please refer to the Release Notes.
+For more details, please refer to the Release.
 
 ## Features
-This project helps locate highlight clips (short videos) within original live streams or videos (timestamps).  
-Features include:  
-1. Locate YouTube highlight clips within their original videos.  
-2. Fast processing: A 5-hour live stream can be analyzed in about 5 minutes(depends on the computer's performance.).  
-3. Works regardless of language, speaker clarity, or volume—accurately identifies and matches the highlight location in the original video.  
-4. Simple to use: Provide the highlight video URL, the original video URL, and specify the start and end timestamps to locate the segment.  
-5. Error-tolerant: Even with noise or sound effects in the highlight video, it can still locate the corresponding position in the original video.
+This project allows you to locate the position (timeline) of a highlight video (short video) within an original live stream or video.  
+Key features include:  
+1. Locate the position of highlight videos from YouTube and Twitch within the original video.
+2. Fast processing (approximately 5 minutes to search a 5-hour live stream, depending on your computer's performance).
+3. Works with any language, speaker clarity, or volume levels—accurately identifying and locating the highlight position in the original video.
+4. Simple operation—just provide the URLs of the highlight and original videos, and input the specific time range in the highlight video you wish to query.
+5. High fault tolerance—even if there is noise or sound effects in the highlight video, the system can still locate its position in the original video.
 
 ## Environment
-It is recommended to have 2–3 GB of available memory. While the system handles longer original videos, having sufficient memory ensures smooth operation.  
-Reserve adequate disk space depending on the audio file length (at least 1 GB suggested).  
+- Ensure at least 2–3 GB of available memory. Although the system has been optimized for handling longer original videos, having this amount of free memory is recommended.
+- Reserve sufficient disk space, depending on the length of the audio file.
 
 ## Requirements
-To execute the source code directly, Python must be installed, and the following dependencies are required:  
+If you wish to execute the source code directly, you need to install Python.  
 
-FFmpeg is essential. Without it, the program will not function correctly.  
-You can download FFmpeg here:  
-https://www.ffmpeg.org/download.html  
+Install dependencies as specified below.  
+
+Additionally, whether you are running the source code or the executable, FFmpeg is essential. Without this dependency, the system will not function properly.
+
+You can download FFmpeg here (official website):  
+https://www.ffmpeg.org/download.html
 
 ## Download and Usage
-Several methods are available for downloading:
+There are several ways to download this project.
 
-1. Download the source code:
+1. Download the source code
 
     ```bash
     git clone https://github.com/JoeYang1412/HighlightLocator.git
@@ -40,45 +43,45 @@ Several methods are available for downloading:
     ```bash
     pip install -r requirements.txt
     ```
+    
+    Ensure FFmpeg is installed and added to your environment variables:  
 
-    Ensure FFmpeg is installed and added to your PATH:
-
-    Download FFmpeg:
+    Download FFmpeg:  
     https://www.ffmpeg.org/download.html
 
-    Run the main program:
+    Run `main_en.py` to use the application:
 
     ```bash
     python main_en.py
     ```
 
-2. Download the executable:
-
+2. Download executable files
+    
     Two types of executables are available for download:
 
-    - **Single-file executable**: Portable but slower to launch on the first run (20-30 seconds).  
-    - **Folder-based executable**: Contains additional runtime dependencies, faster launch time (around 5 seconds), but includes a complete folder.
+    - A single-file executable with high portability. Its downside is slower initial startup, taking around 20–30 seconds.
+    - A bundled version with additional runtime files. This starts faster (around 5 seconds) but comes as an entire folder.
 
-    For the single-file version, download `HighlightLocator_en.exe`. Ensure FFmpeg is installed before running.  
-    For the folder-based version, download `HighlightLocator_dist_en.zip`, extract the folder, ensure FFmpeg is installed, navigate to `HighlightLocator_dist_en`, and run `HighlightLocator_en.exe`.
+    To use the first type, download `HighlightLocator_en.exe`. After downloading, ensure FFmpeg is installed, then launch the executable.  
+    To use the second type, download the `HighlightLocator_dist_en.zip` folder. After downloading, extract it, ensure FFmpeg is installed, navigate to `HighlightLocator_dist_en`, locate `HighlightLocator_en.exe`, and run it.
 
-## Usage Notes
-### Terminology
-The following terms may appear interchangeably but refer to the same concepts:  
-- **Highlight clip** = Short audio = The segment being queried.  
-- **Original video** = Long audio = The entire original live stream or video.  
-- **Segmented long audio** = Split files = The original video divided into multiple chunks.  
+## Terminology
 
-### Workflow
-1. Download YouTube audio.  
-2. Load the highlight clip.  
-3. Split the original video into segments.  
-4. Process each segment, using a sliding window to match the highlight clip.  
-5. If no match is found in a segment, process the next segment until the highlight clip's location is identified.  
-6. If a match is found, return the timestamp and inform the user. If not, notify the user that no match was found in the entire video.  
-7. Return to the main menu.  
+The following terms might appear interchangeably but refer to the same concepts. This explanation is provided to avoid confusion:  
+* Highlight video = short audio = the segment in the short audio the user wants to query.
+* Original video = long audio = the full original video = the entire long audio.
+* Long audio splitting = segmenting = dividing the original video into multiple large parts.
 
-Refer to `fingerprint_manual.md` or `fingerprint_manual_en.md` for detailed information about audio fingerprinting.
+### Workflow and Steps
+1. Download audio from YouTube or Twitch.
+2. Load the short audio file.
+3. Split the long audio file into multiple segments.
+4. Sequentially load each segment of the long audio as a reference file. Using a sliding window approach, match the short audio with the long audio.
+5. If no match is found in the current segment, load the next segment and continue until the position of the short audio in the long audio is located.
+6. If a match is found in a segment, return the timestamp and inform the user of the short audio's position in the long audio. Otherwise, notify the user that no match was found in the entire original video.
+7. Return to the main menu.
+
+For more details on audio fingerprinting, please refer to `fingerprint_manual.md` or `fingerprint_manual_en.md`.
 
 ### Usage Instructions
 After running the program, follow the prompts:
@@ -87,45 +90,50 @@ After running the program, follow the prompts:
 Please select a function:
 1. Find the position of the highlight video in the original video
 2. Exit
-Please select:1
-Search Feature
-Please enter the highlight video URL:example_url
-Please enter the original video (live stream) URL:example_original_url
+Please select : 1
+Search function selected.
 
-Please enter the start time for the highlight video in the format (minutes:seconds):
-Start time (minutes, default is 0):
-Start time (seconds, default is 0):
+Please enter the highlight video URL  (YouTube or Twitch) : example_url
+Please enter the original video (live stream) URL (YouTube or Twitch) : example_original_url
+Highlight video source : youtube
+Original video source : youtube
 
-Please enter the end time for the highlight video in the format (minutes:seconds):
-End time (minutes, default is 0):
-End time (seconds, default is 10):
-Video length:10 seconds
-Download progress:: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 
-Download complete:yt_dlp\example_url.m4a
-Video length:6642 seconds
-Download progress:: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 
-Download complete:yt_dlp\example_original_url.m4a
+Please enter the start time for the highlight video (format MM:SS) :
+Start time (minutes, default is 0) :
+Start time (seconds, default is 0) : 
+
+Please enter the end time for the highlight video (format MM:SS) :
+End time (minutes, default is 0) :
+End time (seconds, default is 10) : 
+Audio length : 10 seconds
+Download progress: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 
+Download completed : audio\example_url.m4a
+Audio length : 6642 seconds
+Download progress: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 
+Download completed : audio\example_original_url.m4a
 The audio file has been successfully divided into 3600 second segments. Files are saved as: ./segment/segments_xxx.wav
 
-Time range to query:00:00:00 ~ 00:02:10 
-Match: False, Best count: 2
-This paragraph does not match.
-Time range to query:00:01:50 ~ 00:04:10
-Match: False, Best count: 2
+Query time range : 00:00:00 ~ 00:02:50 
+Match : False, Best count : 2
+This fragment does not match
+Query time range : 00:02:10 ~ 00:05:20
 .
 .
 .
-Process omitted
+Omitted process.
 .
 .
 .
-Time range to query:00:55:50 ~ 00:58:10
-Match: True, Best count: 25
-This segment matches.
+Query time range : 00:52:10 ~ 00:55:20
+Match : False, Best count : 1
+This fragment does not match
+Query time range : 00:54:40 ~ 00:57:50
+Match : True, Best count : 72
+This fragment matches
 
-Final mapped time = 00:56:56
-Processing time:61.87 seconds
-Search completed.
+Final corresponding time = 00:56:56
+Processing time : 61.74 seconds
+Query completed.
 ```
 
 ## Known Issues
@@ -143,16 +151,16 @@ Found an issue or have suggestions? You can help by:
 Thank you for your contributions to improve this project!😊
 
 
-## v1.0.1 更新資訊
-- 新增英文介面
-- 優化顯示邏輯
+## v1.1.0 更新資訊
+- 精華影片及原始影片來源現已支援 Twitch
+- 同時支援中文及英文介面
 
 詳請請參閱 Release
 
 ## 功能及特色
 本專案可以尋找精華影片(短影片)位於原始直播或影片中的位置(時間軸)
 有以下特色
-1. 可尋找 youtube 上的精華影片位於原影片中的位置
+1. 可尋找 Youtube 及 Twitch 上的精華影片位於原影片中的位置
 2. 快速定位（5 小時的直播影片約 5 分鐘可尋找完成，視電腦效能而定）
 3. 不限語言，不限說話者的發聲準不準確，不限大小聲，皆可定位及辨識在原始影片中的位置
 4. 操作簡單，僅需提供精華影片網址及原影片網址，並輸入你在精華影片中想查詢的時間點即可
@@ -160,6 +168,7 @@ Thank you for your contributions to improve this project!😊
 
 ## 環境：
 建議保留約 2-3 GB 以上左右的可用記憶體，雖本系統對較長的原始影片有另做處理，但建議至少要有前述的空閒記憶體較妥當
+
 保留適當硬碟空間，具體視音檔長度而定
 
 ## 需求：  
@@ -167,7 +176,7 @@ Thank you for your contributions to improve this project!😊
 
 並依照下面要求安裝依賴項
 
-FFmpeg 是必須的，若無此依賴，將無法順利運作
+另外，不論是原始碼或是執行，FFmpeg 都是必須的，若無此依賴，將無法順利運作
 
 可從這裡下載（官網）：
 https://www.ffmpeg.org/download.html
@@ -220,7 +229,7 @@ https://www.ffmpeg.org/download.html
 * 長音檔分割=分割檔=將原始影片分割為多個大片段
 
 ### 運作邏輯及步驟
-1. 下載 youtube 音訊
+1. 下載 Youtube 或是 Twitch 音訊
 2. 讀進短音檔
 3. 將長音檔分割成多段
 4. 依序讀進長音檔分割，並以此當作參考音檔，以滑動視窗的方式，將短音檔與長音檔做匹配
@@ -238,24 +247,32 @@ https://www.ffmpeg.org/download.html
 2. 離開
 請選擇：1
 查詢功能
-請輸入精華影片網址：example_url
-請輸入原始影片(直播)網址：example_original_url
+
+請輸入精華影片網址(youtube 或 twitch)：example_url
+請輸入原始影片(直播)網址(youtube 或 twitch)：example_orignal_url
+精華影片來源： youtube
+原始影片來源： youtube
+
 請依順序輸入在精華影片中要查詢的開始時間（分鐘:秒）：
 開始時間（分鐘，預設為0）：
 開始時間（秒，預設為0）：
+
 請依順序輸入在精華影片中要查詢的結束時間（分鐘:秒）：
 結束時間（分鐘，預設為0）：
 結束時間（秒，預設為10）：
 影音長度：10秒
-下載進度：: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 
-下載完成：yt_dlp\example_url.m4a
-影音長度：16255秒
-下載進度：: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 
-下載完成：yt_dlp\example_original_url.m4a
+下載進度：100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 
+下載完成：audio\example_url.m4a
+影音長度：6642秒
+下載進度：100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 
+下載完成：audio\example_orignal_url.m4a
 音訊文件已成功分割，每段 3600 秒，輸出到: ./segment/segments_xxx.wav
 
-查詢時間段(秒)：00:00:00 ~ 00:02:10 
-Match: False, Best count: 1
+查詢時間段：00:00:00 ~ 00:02:50 
+Match: False, Best count: 2
+此段落不匹配
+查詢時間段：00:02:10 ~ 00:05:20
+Match: False, Best count: 2
 .
 .
 .
@@ -263,11 +280,16 @@ Match: False, Best count: 1
 .
 .
 .
-查詢時間段(秒)：03:15:50 ~ 03:18:10
-Match: True, Best count: 79
+查詢時間段：00:52:10 ~ 00:55:20
+Match: False, Best count: 1
+此段落不匹配
+查詢時間段：00:54:40 ~ 00:57:50
+Match: True, Best count: 72
 此段落匹配
-最終對應時間 = 03:17:44
-處理時間：292.65秒
+
+最終對應時間 = 00:56:56
+處理時間：64.08秒
+查詢結束。
 ```
 
 ## 相關問題
